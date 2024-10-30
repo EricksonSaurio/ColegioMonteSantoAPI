@@ -10,6 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ColegioMonteSantoContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Configuración de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy => policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -48,6 +57,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Usar la política de CORS
+app.UseCors("AllowSpecificOrigin");
 
 // Asegúrate de que `UseAuthentication` esté antes de `UseAuthorization`
 app.UseAuthentication();
