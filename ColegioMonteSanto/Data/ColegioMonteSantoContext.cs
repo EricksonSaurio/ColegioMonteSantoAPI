@@ -24,7 +24,6 @@ namespace ColegioMonteSanto.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             // Definición explícita de la relación entre UsuarioModel y RolModel
             modelBuilder.Entity<UsuarioModel>()
                 .HasOne(u => u.Rol)
@@ -32,26 +31,36 @@ namespace ColegioMonteSanto.Data
                 .HasForeignKey(u => u.rol_id)
                 .OnDelete(DeleteBehavior.Restrict); // Define que el borrado de un rol no afecte a usuarios
 
+            // Relación opcional con Profesor
+            modelBuilder.Entity<UsuarioModel>()
+                .HasOne(u => u.Profesor)
+                .WithMany() // Asumiendo que no tienes una lista de usuarios en ProfesorModel
+                .HasForeignKey(u => u.profesor_id)
+                .OnDelete(DeleteBehavior.Restrict); // No elimina el usuario si se elimina el profesor
+
+            // Relación opcional con Alumno
+            modelBuilder.Entity<UsuarioModel>()
+                .HasOne(u => u.Alumno)
+                .WithMany() // Asumiendo que no tienes una lista de usuarios en AlumnoModel
+                .HasForeignKey(u => u.alumno_id)
+                .OnDelete(DeleteBehavior.Restrict); // No elimina el usuario si se elimina el alumno
+
+            // Configura las relaciones en NotaModel (ya configuradas)
             modelBuilder.Entity<NotaModel>()
                 .HasOne(n => n.Actividad)
                 .WithMany()
                 .HasForeignKey(n => n.actividad_id);
+
             modelBuilder.Entity<NotaModel>()
                 .HasOne(n => n.Alumno)
                 .WithMany()
                 .HasForeignKey(n => n.alumno_id);
 
-            // Configura la relación entre NotaModel y MateriaModel
             modelBuilder.Entity<NotaModel>()
                 .HasOne(n => n.Materia)
                 .WithMany()
                 .HasForeignKey(n => n.materia_id);
-
-            // Configura la relación entre NotaModel y ActividadModel
-            modelBuilder.Entity<NotaModel>()
-                .HasOne(n => n.Actividad)
-                .WithMany()
-                .HasForeignKey(n => n.actividad_id);
         }
     }
-}
+ }
+

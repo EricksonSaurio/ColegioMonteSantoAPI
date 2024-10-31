@@ -9,18 +9,21 @@ namespace ColegioMonteSanto.Models
         [Key]
         public int usuario_id { get; set; }
 
-        public string nombre { get; set; }
+        public string? nombre { get; set; }
 
         public string usuario { get; set; }
 
         public string clave { get; set; }
 
-        [ForeignKey("Rol")] // Relaciona explicitamente el rol_id con la propiedad Rol
         public int rol_id { get; set; }
 
         public int estado { get; set; } = 1;
 
-        // La propiedad de navegación Rol, la hacemos opcional para evitar conflictos
+        public int? profesor_id { get; set; }
+        public int? alumno_id { get; set; }
+
         public virtual RolModel? Rol { get; set; }
+        public virtual ProfesorModel? Profesor { get; set; }
+        public virtual AlumnoModel? Alumno { get; set; }
     }
 }
