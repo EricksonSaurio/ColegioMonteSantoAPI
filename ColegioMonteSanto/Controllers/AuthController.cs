@@ -1,5 +1,5 @@
 ﻿using ColegioMonteSanto.Data;
-using ColegioMonteSanto.Models; 
+using ColegioMonteSanto.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,7 +12,7 @@ using System.Text;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly ColegioMonteSantoContext _dbContext; //inyectar el contexto de base de datos
+    private readonly ColegioMonteSantoContext _dbContext; // Inyectar el contexto de base de datos
 
     public AuthController(IConfiguration configuration, ColegioMonteSantoContext dbContext)
     {
@@ -27,14 +27,20 @@ public class AuthController : ControllerBase
         var user = _dbContext.Usuarios.Include(u => u.Rol)
                                        .FirstOrDefault(u => u.usuario == login.Username && u.clave == login.Password);
 
-        if (user != null)
+        if (user == null)
         {
-            // Genera el token incluyendo el rol del usuario
-            var token = GenerateToken(user.usuario, user.Rol.nombre_rol);
-            return Ok(new { token });
+            return Unauthorized(new { mensaje = "Credenciales incorrectas" });
         }
 
-        return Unauthorized();
+        // Verifica si el usuario está activo
+        if (user.estado != 1) // Asumiendo que 1 es el estado activo
+        {
+            return Unauthorized(new { mensaje = "Usuario inactivo. Contacte al administrador." });
+        }
+
+        // Genera el token incluyendo el rol del usuario
+        var token = GenerateToken(user.usuario, user.Rol?.nombre_rol);
+        return Ok(new { token });
     }
 
     private string GenerateToken(string username, string role)
