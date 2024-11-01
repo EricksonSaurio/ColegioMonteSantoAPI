@@ -3,78 +3,93 @@ using ColegioMonteSanto.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ColegioMonteSanto.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
+    [Authorize(Roles = "Administrador")]
+    [Route("[controller]")]
     [ApiController]
     public class MateriaController : ControllerBase
     {
-        private readonly IMateriaService _materiaService;
+        private readonly ColegioMonteSantoContext _context;
 
-        public MateriaController(IMateriaService materiaService)
+        public MateriaController(ColegioMonteSantoContext context)
         {
-            _materiaService = materiaService;
+            _context = context;
         }
 
-        // Obtener materias asignadas al profesor autenticado
-        [HttpGet("profesor")]
-        [Authorize(Roles = "Profesor")]
-        public async Task<IActionResult> GetMateriasProfesor()
+        // GET: api/Materia/Listar
+        [HttpGet("Listar")]
+        public async Task<ActionResult<IEnumerable<MateriaModel>>> ListarMaterias()
         {
-            var profesorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var materias = await _materiaService.GetMateriasByProfesorIdAsync(int.Parse(profesorId));
-            return Ok(materias);
+            return await _context.Materias.ToListAsync();
         }
 
-        // Obtener materias asignadas al alumno autenticado
-        [HttpGet("alumno")]
-        [Authorize(Roles = "Alumno")]
-        public async Task<IActionResult> GetMateriasAlumno()
-        {
-            var alumnoId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var materias = await _materiaService.GetMateriasByAlumnoIdAsync(int.Parse(alumnoId));
-            return Ok(materias);
-        }
-
-        // Crear, actualizar y eliminar materias (solo para administrador)
-        [HttpPost]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> CreateMateria([FromBody] MateriaModel model)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await _materiaService.CreateMateriaAsync(model);
-            return CreatedAtAction(nameof(GetMateriaById), new { id = result.materia_id }, result);
-        }
-
-        [HttpPut("{id}")]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> UpdateMateria(int id, [FromBody] MateriaModel model)
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var result = await _materiaService.UpdateMateriaAsync(id, model);
-            return result ? NoContent() : NotFound();
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Administrador")]
-        public async Task<IActionResult> DeleteMateria(int id)
-        {
-            var result = await _materiaService.DeleteMateriaAsync(id);
-            return result ? NoContent() : NotFound();
-        }
-
+        // GET: api/Materia/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = "Profesor, Alumno, Administrador")]
-        public async Task<IActionResult> GetMateriaById(int id)
+        public async Task<ActionResult<MateriaModel>> GetMateriaById(int id)
         {
-            var materia = await _materiaService.GetMateriaByIdAsync(id);
-            return materia != null ? Ok(materia) : NotFound();
+            var materia = await _context.Materias.FindAsync(id);
+            if (materia == null)
+            {
+                return NotFound("Materia no encontrada");
+            }
+            return Ok(materia);
+        }
+
+        // POST: api/Materia/Registrar
+        [HttpPost("Registrar")]
+        public async Task<ActionResult<MateriaModel>> RegistrarMateria([FromBody] MateriaModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Materias.Add(model);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetMateriaById), new { id = model.materia_id }, model);
+        }
+
+        // PUT: api/Materia/Editar/{id}
+        [HttpPut("Editar/{id}")]
+        public async Task<IActionResult> EditarMateria(int id, [FromBody] MateriaModel model)
+        {
+            if (id != model.materia_id)
+            {
+                return BadRequest("ID de la materia no coincide");
+            }
+
+            var materia = await _context.Materias.FindAsync(id);
+            if (materia == null)
+            {
+                return NotFound("Materia no encontrada");
+            }
+
+            // Actualizar los campos necesarios
+            materia.nombre_materia = model.nombre_materia;
+            materia.estado = model.estado;
+            materia.profesorid = model.profesorid;
+
+            await _context.SaveChangesAsync();
+            return NoContent(); // Se retorna NoContent para indicar éxito sin contenido
+        }
+
+        // DELETE: api/Materia/Eliminar/{id}
+        [HttpDelete("Eliminar/{id}")]
+        public async Task<IActionResult> EliminarMateria(int id)
+        {
+            var materia = await _context.Materias.FindAsync(id);
+            if (materia == null)
+            {
+                return NotFound("Materia no encontrada");
+            }
+
+            _context.Materias.Remove(materia);
+            await _context.SaveChangesAsync();
+            return NoContent(); // Se retorna NoContent para indicar éxito sin contenido
         }
     }
-
 }

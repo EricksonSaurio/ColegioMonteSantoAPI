@@ -60,7 +60,7 @@ namespace ColegioMonteSanto.Controllers
             var profesorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var materias = await _context.Materias
-                .Where(m => m.ProfesorId == profesorId) // Asegúrate de que exista ProfesorId en MateriaModel
+                .Where(m => m.profesorid == profesorId) // Asegúrate de que exista ProfesorId en MateriaModel
                 .ToListAsync();
 
             return Ok(materias);

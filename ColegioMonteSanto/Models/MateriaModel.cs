@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ColegioMonteSanto.Models
 {
@@ -16,9 +17,10 @@ namespace ColegioMonteSanto.Models
         public int estado { get; set; }
 
         // Relación con el Profesor
-        public int ProfesorId { get; set; } // Agrega esta propiedad
+        public int profesorid { get; set; } // Clave foránea
 
         // Propiedad de navegación
-        public ProfesorModel Profesor { get; set; }
+        [JsonIgnore]
+        public ProfesorModel? Profesor { get; set; }
     }
 }
