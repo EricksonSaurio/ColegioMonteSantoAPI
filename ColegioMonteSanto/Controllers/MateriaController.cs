@@ -20,15 +20,15 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Administrador, Profesor")]
-        // GET: api/Materia/Listar
+        [Authorize(Roles = "Administrador, Profesor, Estudiante")]
+        
         [HttpGet("Listar")]
         public async Task<ActionResult<IEnumerable<MateriaModel>>> ListarMaterias()
         {
             return await _context.Materias.ToListAsync();
         }
 
-        // GET: api/Materia/{id}
+        
         [HttpGet("{id}")]
         public async Task<ActionResult<MateriaModel>> GetMateriaById(int id)
         {
@@ -40,7 +40,7 @@ namespace ColegioMonteSanto.Controllers
             return Ok(materia);
         }
 
-        // POST: api/Materia/Registrar
+       
         [Authorize(Roles = "Administrador")]
         [HttpPost("Registrar")]
         public async Task<ActionResult<MateriaModel>> RegistrarMateria([FromBody] MateriaModel model)
@@ -55,7 +55,7 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetMateriaById), new { id = model.materia_id }, model);
         }
 
-        // PUT: api/Materia/Editar/{id}
+        
         [Authorize(Roles = "Administrador")]
         [HttpPut("Editar/{id}")]
         public async Task<IActionResult> EditarMateria(int id, [FromBody] MateriaModel model)
@@ -71,16 +71,15 @@ namespace ColegioMonteSanto.Controllers
                 return NotFound("Materia no encontrada");
             }
 
-            // Actualizar los campos necesarios
+           
             materia.nombre_materia = model.nombre_materia;
             materia.estado = model.estado;
             materia.profesorid = model.profesorid;
 
             await _context.SaveChangesAsync();
-            return NoContent(); // Se retorna NoContent para indicar éxito sin contenido
+            return NoContent(); 
         }
-
-        // DELETE: api/Materia/Eliminar/{id}
+        
         [Authorize(Roles = "Administrador")]
         [HttpDelete("Eliminar/{id}")]
         public async Task<IActionResult> EliminarMateria(int id)
@@ -93,7 +92,7 @@ namespace ColegioMonteSanto.Controllers
 
             _context.Materias.Remove(materia);
             await _context.SaveChangesAsync();
-            return NoContent(); // Se retorna NoContent para indicar éxito sin contenido
+            return NoContent(); 
         }
     }
 }

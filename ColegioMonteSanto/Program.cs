@@ -61,7 +61,6 @@ app.UseHttpsRedirection();
 // Usar la política de CORS
 app.UseCors("AllowSpecificOrigin");
 
-// Asegúrate de que `UseAuthentication` esté antes de `UseAuthorization`
 app.UseAuthentication();
 app.UseAuthorization();
 
