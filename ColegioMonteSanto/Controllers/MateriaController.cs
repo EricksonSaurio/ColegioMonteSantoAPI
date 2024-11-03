@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ColegioMonteSanto.Controllers
 {
-    [Authorize(Roles = "Administrador")]
+    
     [Route("[controller]")]
     [ApiController]
     public class MateriaController : ControllerBase
@@ -20,6 +20,7 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "Administrador, Profesor")]
         // GET: api/Materia/Listar
         [HttpGet("Listar")]
         public async Task<ActionResult<IEnumerable<MateriaModel>>> ListarMaterias()
@@ -40,6 +41,7 @@ namespace ColegioMonteSanto.Controllers
         }
 
         // POST: api/Materia/Registrar
+        [Authorize(Roles = "Administrador")]
         [HttpPost("Registrar")]
         public async Task<ActionResult<MateriaModel>> RegistrarMateria([FromBody] MateriaModel model)
         {
@@ -54,6 +56,7 @@ namespace ColegioMonteSanto.Controllers
         }
 
         // PUT: api/Materia/Editar/{id}
+        [Authorize(Roles = "Administrador")]
         [HttpPut("Editar/{id}")]
         public async Task<IActionResult> EditarMateria(int id, [FromBody] MateriaModel model)
         {
@@ -78,6 +81,7 @@ namespace ColegioMonteSanto.Controllers
         }
 
         // DELETE: api/Materia/Eliminar/{id}
+        [Authorize(Roles = "Administrador")]
         [HttpDelete("Eliminar/{id}")]
         public async Task<IActionResult> EliminarMateria(int id)
         {
