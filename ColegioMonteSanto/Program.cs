@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ColegioMonteSantoContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",
-        policy => policy.WithOrigins("http://localhost:4200")
+        policy => policy.WithOrigins("http://localhost:4200","http://colegiomontesanto.site", "http://35.183.148.141", "https://colegiomontesanto.site")
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
