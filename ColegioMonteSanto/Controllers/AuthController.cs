@@ -12,7 +12,7 @@ using System.Text;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly ColegioMonteSantoContext _dbContext; // Inyectar el contexto de base de datos
+    private readonly ColegioMonteSantoContext _dbContext;
 
     public AuthController(IConfiguration configuration, ColegioMonteSantoContext dbContext)
     {
@@ -23,7 +23,6 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel login)
     {
-        // Verifica las credenciales del usuario en la base de datos y obtiene el rol
         var user = _dbContext.Usuarios.Include(u => u.Rol)
                                        .FirstOrDefault(u => u.usuario == login.Username && u.clave == login.Password);
 
@@ -32,13 +31,11 @@ public class AuthController : ControllerBase
             return Unauthorized(new { mensaje = "Credenciales incorrectas" });
         }
 
-        // Verifica si el usuario está activo
-        if (user.estado != 1) // Asumiendo que 1 es el estado activo
+        if (user.estado != 1)
         {
             return Unauthorized(new { mensaje = "Usuario inactivo. Contacte al administrador." });
         }
 
-        // Genera el token incluyendo el rol del usuario
         var token = GenerateToken(user.usuario, user.Rol?.nombre_rol);
         return Ok(new { token });
     }
@@ -52,7 +49,7 @@ public class AuthController : ControllerBase
         var claims = new[]
         {
             new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(ClaimTypes.Role, role),  // Se incluye el rol en el token
+            new Claim(ClaimTypes.Role, role),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 

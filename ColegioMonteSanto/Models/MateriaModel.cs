@@ -16,10 +16,10 @@ namespace ColegioMonteSanto.Models
         [Required]
         public int estado { get; set; }
 
-        // Relación con el Profesor
-        public int profesorid { get; set; } // Clave foránea
+       
+        public int profesorid { get; set; } 
 
-        // Propiedad de navegación
+        
         [JsonIgnore]
         public ProfesorModel? Profesor { get; set; }
     }

@@ -16,10 +16,10 @@ namespace ColegioMonteSanto.Models
         public int materia_id { get; set; }
 
         [Required]
-        [Range(0, 100)] // Puedes ajustar el rango de la calificación
+        [Range(0, 100)]
         public int nota { get; set; }
 
-        // Propiedades de navegación para relaciones
+        
         public AlumnoModel Alumno { get; set; }
         public MateriaModel Materia { get; set; }
     }

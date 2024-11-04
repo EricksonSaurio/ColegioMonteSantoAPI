@@ -21,8 +21,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Calificaciones/Listar
-        // Permite que el Administrador y el Profesor puedan listar todas las calificaciones
         [HttpGet]
         [Route("Listar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -34,8 +32,6 @@ namespace ColegioMonteSanto.Controllers
                 .ToListAsync();
         }
 
-        // GET: /Calificaciones/ListarPropias
-        // Permite que el Alumno liste solo sus propias calificaciones
         [HttpGet]
         [Route("ListarPropias")]
         [Authorize(Roles = "Alumno")]
@@ -55,8 +51,6 @@ namespace ColegioMonteSanto.Controllers
                 .ToListAsync();
         }
 
-        // GET: /Calificaciones/{id}
-        // Permite que tanto el Administrador, el Profesor y el Alumno (propietario) vean una calificación específica
         [HttpGet("{id}")]
         [Authorize(Roles = "Administrador, Profesor, Alumno")]
         public async Task<ActionResult<CalificacionModel>> GetCalificacionPorId(int id)
@@ -71,7 +65,6 @@ namespace ColegioMonteSanto.Controllers
                 return NotFound("Calificación no encontrada.");
             }
 
-            // Verificar si el usuario es un alumno y si la calificación le pertenece
             if (User.IsInRole("Alumno"))
             {
                 var alumnoIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -90,8 +83,6 @@ namespace ColegioMonteSanto.Controllers
             return calificacion;
         }
 
-        // POST: /Calificaciones/Registrar
-        // Solo el Administrador y el Profesor pueden registrar nuevas calificaciones
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -103,8 +94,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction("GetCalificacionPorId", new { id = calificacion.calificacion_id }, calificacion);
         }
 
-        // PUT: /Calificaciones/Editar/{id}
-        // Solo el Administrador y el Profesor pueden editar calificaciones
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -136,8 +125,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Calificaciones/Eliminar/{id}
-        // Solo el Administrador y el Profesor pueden eliminar calificaciones
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -156,7 +143,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Método auxiliar para verificar si una calificación existe
         private bool CalificacionExists(int id)
         {
             return _context.Calificaciones.Any(e => e.calificacion_id == id);

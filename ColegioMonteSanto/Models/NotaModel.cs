@@ -18,15 +18,15 @@ namespace ColegioMonteSanto.Models
 
         public DateTime fecha { get; set; }
 
-        // Relación con AlumnoModel
+        
         [ForeignKey("alumno_id")]
         public virtual AlumnoModel Alumno { get; set; }
 
-        // Relación con MateriaModel
+        
         [ForeignKey("materia_id")]
         public virtual MateriaModel Materia { get; set; }
 
-        // Relación con ActividadModel
+        
         [ForeignKey("actividad_id")]
         public virtual ActividadModel Actividad { get; set; }
     }

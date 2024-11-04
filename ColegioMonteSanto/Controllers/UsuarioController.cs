@@ -35,37 +35,34 @@ namespace ColegioMonteSanto.Controllers
         [Route("Registrar")]
         public async Task<ActionResult<UsuarioModel>> PostUsuario(UsuarioModel usuario)
         {
-            // Verificar si el rol especificado existe
             var rolExistente = await _context.Roles.FindAsync(usuario.rol_id);
             if (rolExistente == null)
             {
                 return BadRequest("El rol especificado no existe.");
             }
 
-            // Obtener el nombre según el rol antes de la validación
-            if (usuario.rol_id == 2 && usuario.profesor_id != null) // Rol de Profesor
+            if (usuario.rol_id == 2 && usuario.profesor_id != null)
             {
                 var profesor = await _context.Profesores.FindAsync(usuario.profesor_id);
                 if (profesor == null)
                 {
                     return BadRequest("El profesor especificado no existe.");
                 }
-                usuario.nombre = profesor.nombre; // Asignar el nombre del profesor
+                usuario.nombre = profesor.nombre;
                 usuario.alumno_id = null;
             }
-            else if (usuario.rol_id == 3 && usuario.alumno_id != null) // Rol de Estudiante
+            else if (usuario.rol_id == 3 && usuario.alumno_id != null)
             {
                 var alumno = await _context.Alumnos.FindAsync(usuario.alumno_id);
                 if (alumno == null)
                 {
                     return BadRequest("El alumno especificado no existe.");
                 }
-                usuario.nombre = alumno.nombre_alumno; // Asignar el nombre del alumno
+                usuario.nombre = alumno.nombre_alumno;
                 usuario.profesor_id = null;
             }
             else
             {
-                // Mensaje de error detallado según el rol y campos específicos
                 if (usuario.rol_id == 2)
                 {
                     return BadRequest("Para el rol de Profesor, debe especificar un profesor_id válido.");
@@ -80,7 +77,6 @@ namespace ColegioMonteSanto.Controllers
                 }
             }
 
-            // Verificar duplicación de usuario
             var usuarioExistente = await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.usuario == usuario.usuario);
             if (usuarioExistente != null)
@@ -103,32 +99,30 @@ namespace ColegioMonteSanto.Controllers
                 return BadRequest("El ID del usuario no coincide.");
             }
 
-            // Verificar si el rol especificado existe
             var rolExistente = await _context.Roles.FindAsync(usuario.rol_id);
             if (rolExistente == null)
             {
                 return BadRequest("El rol especificado no existe.");
             }
 
-            // Asignar profesor_id o alumno_id en función del rol y actualizar el nombre
-            if (usuario.rol_id == 2 && usuario.profesor_id != null) // Rol de Profesor
+            if (usuario.rol_id == 2 && usuario.profesor_id != null)
             {
                 var profesor = await _context.Profesores.FindAsync(usuario.profesor_id);
                 if (profesor == null)
                 {
                     return BadRequest("El profesor especificado no existe.");
                 }
-                usuario.nombre = profesor.nombre; // Asignar el nombre del profesor
+                usuario.nombre = profesor.nombre;
                 usuario.alumno_id = null;
             }
-            else if (usuario.rol_id == 3 && usuario.alumno_id != null) // Rol de Estudiante
+            else if (usuario.rol_id == 3 && usuario.alumno_id != null)
             {
                 var alumno = await _context.Alumnos.FindAsync(usuario.alumno_id);
                 if (alumno == null)
                 {
                     return BadRequest("El alumno especificado no existe.");
                 }
-                usuario.nombre = alumno.nombre_alumno; // Asignar el nombre del alumno
+                usuario.nombre = alumno.nombre_alumno;
                 usuario.profesor_id = null;
             }
             else

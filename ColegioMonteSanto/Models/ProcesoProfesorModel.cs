@@ -20,7 +20,7 @@ namespace ColegioMonteSanto.Models
 
         public int estado { get; set; }
 
-        // Relaciones para las llaves foráneas
+       
         public virtual GradoModel grado { get; set; }
         public virtual AulaModel aula { get; set; }
         public virtual ProfesorModel profesor { get; set; }

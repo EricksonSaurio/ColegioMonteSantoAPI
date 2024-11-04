@@ -18,7 +18,7 @@ namespace ColegioMonteSanto.Models
         [Required]
         public int estado { get; set; }
 
-        // Relaciones para las llaves foráneas
+       
         public virtual AlumnoModel Alumno { get; set; }
         public virtual ProcesoAlumnoModel proceso { get; set; }
     }

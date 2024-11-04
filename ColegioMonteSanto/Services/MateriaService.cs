@@ -32,7 +32,7 @@ public class MateriaService : IMateriaService
         var materia = await _context.Materias.FindAsync(id);
         if (materia == null) return false;
 
-        // Actualizar los campos necesarios
+       
         materia.nombre_materia = model.nombre_materia;
         materia.estado = model.estado;
         materia.profesorid = model.profesorid;

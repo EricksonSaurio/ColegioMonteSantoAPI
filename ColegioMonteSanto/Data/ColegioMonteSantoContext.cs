@@ -24,28 +24,25 @@ namespace ColegioMonteSanto.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Definición explícita de la relación entre UsuarioModel y RolModel
+
             modelBuilder.Entity<UsuarioModel>()
                 .HasOne(u => u.Rol)
-                .WithMany() // Si RolModel no tiene una lista de usuarios, usamos WithMany()
+                .WithMany()
                 .HasForeignKey(u => u.rol_id)
-                .OnDelete(DeleteBehavior.Restrict); // Define que el borrado de un rol no afecte a usuarios
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación opcional con Profesor
             modelBuilder.Entity<UsuarioModel>()
                 .HasOne(u => u.Profesor)
-                .WithMany() // Asumiendo que no tienes una lista de usuarios en ProfesorModel
+                .WithMany()
                 .HasForeignKey(u => u.profesor_id)
-                .OnDelete(DeleteBehavior.Restrict); // No elimina el usuario si se elimina el profesor
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Relación opcional con Alumno
             modelBuilder.Entity<UsuarioModel>()
                 .HasOne(u => u.Alumno)
-                .WithMany() // Asumiendo que no tienes una lista de usuarios en AlumnoModel
+                .WithMany()
                 .HasForeignKey(u => u.alumno_id)
-                .OnDelete(DeleteBehavior.Restrict); // No elimina el usuario si se elimina el alumno
+                .OnDelete(DeleteBehavior.Restrict);
 
-            // Configura las relaciones en NotaModel (ya configuradas)
             modelBuilder.Entity<NotaModel>()
                 .HasOne(n => n.Actividad)
                 .WithMany()

@@ -20,7 +20,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // Listar alumnos: permitido para Administrador y Profesor
         [HttpGet]
         [Route("Listar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -29,7 +28,6 @@ namespace ColegioMonteSanto.Controllers
             return await _context.Alumnos.ToListAsync();
         }
 
-        // Obtener alumno por carnet: permitido solo para Administrador y Profesor
         [HttpGet("{carnet}")]
         [Authorize(Roles = "Administrador, Profesor")]
         public async Task<ActionResult<AlumnoModel>> GetAlumnoPorCarnet(string carnet)
@@ -44,7 +42,6 @@ namespace ColegioMonteSanto.Controllers
             return alumno;
         }
 
-        // Crear alumno: permitido solo para Administrador
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador")]
@@ -56,7 +53,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction("GetAlumnoPorCarnet", new { carnet = alumno.carnet }, alumno);
         }
 
-        // Editar alumno: permitido solo para Administrador
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -93,7 +89,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Eliminar alumno: permitido solo para Administrador
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -112,7 +107,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Método auxiliar para verificar si un alumno existe
         private bool AlumnoExists(int id)
         {
             return _context.Alumnos.Any(e => e.alumno_id == id);

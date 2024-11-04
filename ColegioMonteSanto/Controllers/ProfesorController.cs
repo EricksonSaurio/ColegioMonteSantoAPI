@@ -20,7 +20,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Profesores/Listar
         [HttpGet]
         [Route("Listar")]
         public async Task<ActionResult<IEnumerable<ProfesorModel>>> GetProfesores()
@@ -28,7 +27,6 @@ namespace ColegioMonteSanto.Controllers
             return await _context.Profesores.ToListAsync();
         }
 
-        // GET: /Profesores/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProfesorModel>> GetProfesorPorId(int id)
         {
@@ -42,7 +40,6 @@ namespace ColegioMonteSanto.Controllers
             return profesor;
         }
 
-        // POST: /Profesores/Registrar
         [HttpPost]
         [Route("Registrar")]
         public async Task<ActionResult<ProfesorModel>> PostProfesor(ProfesorModel profesor)
@@ -53,7 +50,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetProfesorPorId), new { id = profesor.profesor_id }, profesor);
         }
 
-        // PUT: /Profesores/Editar/5
         [HttpPut]
         [Route("Editar/{id}")]
         public async Task<IActionResult> EditarProfesor(int id, [FromBody] ProfesorModel profesor)
@@ -89,27 +85,23 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Profesores/Eliminar/5
         [HttpDelete]
         [Route("Eliminar/{id}")]
         public async Task<IActionResult> EliminarProfesor(int id)
         {
             var profesor = await _context.Profesores.FindAsync(id);
 
-            // Verificar si el profesor existe
             if (profesor == null)
             {
                 return NotFound("Profesor no encontrado.");
             }
 
-            // Remover el profesor de la base de datos
             _context.Profesores.Remove(profesor);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // Método auxiliar para verificar si un profesor existe
         private bool ProfesorExists(int id)
         {
             return _context.Profesores.Any(e => e.profesor_id == id);

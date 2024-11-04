@@ -21,38 +21,32 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Actividades/Listar
         [HttpGet]
         [Route("Listar")]
-        [Authorize(Roles = "Administrador,Profesor,Alumno")]
+        [Authorize(Roles = "Administrador,Profesor,Estudiante")]
         public async Task<ActionResult<IEnumerable<ActividadModel>>> GetActividades()
         {
-            // Obtén el rol del usuario logueado
             var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
             if (userRole == "Alumno")
             {
-                // Obtén el ID del usuario (alumno) logueado
                 var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-                // Filtra las actividades para mostrar solo las asociadas al alumno en la tabla notas
                 var actividadesAlumno = await _context.Notas
                     .Where(n => n.alumno_id == userId)
-                    .Include(n => n.Actividad)  // Incluye la actividad asociada
-                    .Select(n => n.Actividad)   // Selecciona solo la actividad
-                    .Distinct()                 // Evita duplicados en caso de múltiples notas para la misma actividad
+                    .Include(n => n.Actividad)
+                    .Select(n => n.Actividad)
+                    .Distinct()
                     .ToListAsync();
 
                 return actividadesAlumno;
             }
 
-            // Para administradores y profesores, devuelve todas las actividades
             return await _context.Actividades.ToListAsync();
         }
 
-        // GET: /Actividades/{id}
         [HttpGet("{id}")]
-        [Authorize(Roles = "Administrador,Profesor,Alumno")]
+        [Authorize(Roles = "Administrador,Profesor,Estudiante")]
         public async Task<ActionResult<ActividadModel>> GetActividadPorId(int id)
         {
             var actividad = await _context.Actividades.FindAsync(id);
@@ -65,7 +59,6 @@ namespace ColegioMonteSanto.Controllers
             return actividad;
         }
 
-        // POST: /Actividades/Registrar
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador,Profesor")]
@@ -77,7 +70,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetActividadPorId), new { id = actividad.actividad_id }, actividad);
         }
 
-        // PUT: /Actividades/Editar/{id}
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador,Profesor")]
@@ -109,7 +101,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Actividades/Eliminar/{id}
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador,Profesor")]

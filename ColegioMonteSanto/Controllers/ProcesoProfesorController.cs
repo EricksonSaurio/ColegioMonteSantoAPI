@@ -22,8 +22,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /ProcesoProfesor/ListarAlumnosPorMateria/{materiaId}
-        // Permite que el profesor obtenga la lista de alumnos en una materia específica
         [HttpGet("ListarAlumnosPorMateria/{materiaId}")]
         public async Task<ActionResult<IEnumerable<AlumnoModel>>> ListarAlumnosPorMateria(int materiaId)
         {
@@ -34,8 +32,6 @@ namespace ColegioMonteSanto.Controllers
             return Ok(alumnos);
         }
 
-        // POST: /ProcesoProfesor/AsignarCalificacion
-        // Permite al profesor asignar una calificación a un alumno
         [HttpPost("AsignarCalificacion")]
         public async Task<ActionResult> AsignarCalificacion(int alumnoId, int materiaId, int nota)
         {
@@ -52,15 +48,13 @@ namespace ColegioMonteSanto.Controllers
             return Ok("Calificación asignada correctamente.");
         }
 
-        // GET: /ProcesoProfesor/MateriasAsignadas
-        // Permite que el profesor vea las materias que tiene asignadas
         [HttpGet("MateriasAsignadas")]
         public async Task<ActionResult<IEnumerable<MateriaModel>>> MateriasAsignadas()
         {
             var profesorId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
             var materias = await _context.Materias
-                .Where(m => m.profesorid == profesorId) // Asegúrate de que exista ProfesorId en MateriaModel
+                .Where(m => m.profesorid == profesorId)
                 .ToListAsync();
 
             return Ok(materias);

@@ -21,8 +21,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Notas/Listar
-        // Permite que el Administrador y el Profesor puedan listar todas las notas
         [HttpGet]
         [Route("Listar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -34,8 +32,6 @@ namespace ColegioMonteSanto.Controllers
                 .ToListAsync();
         }
 
-        // GET: /Notas/ListarPropias
-        // Permite que el Alumno liste solo sus propias notas
         [HttpGet]
         [Route("ListarPropias")]
         [Authorize(Roles = "Alumno")]
@@ -50,13 +46,11 @@ namespace ColegioMonteSanto.Controllers
 
             var alumnoId = int.Parse(alumnoIdString);
             return await _context.Notas
-                .Where(n => n.alumno_id == alumnoId) // Asegúrate de que esta propiedad exista en tu modelo NotaModel
+                .Where(n => n.alumno_id == alumnoId)
                 .Include(n => n.Materia)
                 .ToListAsync();
         }
 
-        // GET: /Notas/{id}
-        // Permite que tanto el Administrador como el Profesor y el Alumno (propietario) vean una nota específica
         [HttpGet("{id}")]
         [Authorize(Roles = "Administrador, Profesor, Alumno")]
         public async Task<ActionResult<NotaModel>> GetNotaPorId(int id)
@@ -71,7 +65,6 @@ namespace ColegioMonteSanto.Controllers
                 return NotFound("Nota no encontrada.");
             }
 
-            // Verificar si el usuario es un alumno y si la nota le pertenece
             if (User.IsInRole("Alumno"))
             {
                 var alumnoIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -81,7 +74,7 @@ namespace ColegioMonteSanto.Controllers
                 }
 
                 var alumnoId = int.Parse(alumnoIdString);
-                if (nota.alumno_id != alumnoId) // Asegúrate de que esta propiedad coincida con tu modelo
+                if (nota.alumno_id != alumnoId)
                 {
                     return Forbid("No tienes acceso a esta nota.");
                 }
@@ -90,8 +83,6 @@ namespace ColegioMonteSanto.Controllers
             return nota;
         }
 
-        // POST: /Notas/Registrar
-        // Solo el Administrador y el Profesor pueden registrar nuevas notas
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -103,8 +94,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction("GetNotaPorId", new { id = nota.nota_id }, nota);
         }
 
-        // PUT: /Notas/Editar/{id}
-        // Solo el Administrador y el Profesor pueden editar notas
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -141,8 +130,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Notas/Eliminar/{id}
-        // Solo el Administrador y el Profesor pueden eliminar notas
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -161,7 +148,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Método auxiliar para verificar si una nota existe
         private bool NotaExists(int id)
         {
             return _context.Notas.Any(e => e.nota_id == id);

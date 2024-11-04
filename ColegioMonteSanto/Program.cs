@@ -23,11 +23,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuración de la clave secreta para JWT
+
 var secretKey = builder.Configuration["Jwt:Key"] ?? throw new InvalidOperationException("La clave JWT no está configurada en appsettings.json.");
 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
 
-// Configuración de autenticación con JWT
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -43,13 +43,13 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = key  // Reutilizamos la variable `key`
+        IssuerSigningKey = key  
     };
 });
 
 var app = builder.Build();
 
-// Configure el pipeline de solicitud HTTP.
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Usar la política de CORS
+
 app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthentication();

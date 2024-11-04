@@ -20,8 +20,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Aulas/Listar
-        // Permite que tanto el Administrador como el Profesor puedan listar las aulas
         [HttpGet]
         [Route("Listar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -30,8 +28,6 @@ namespace ColegioMonteSanto.Controllers
             return await _context.Aulas.ToListAsync();
         }
 
-        // GET: /Aulas/{id}
-        // Permite que tanto el Administrador como el Profesor puedan ver una aula específica
         [HttpGet("{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
         public async Task<ActionResult<AulaModel>> GetAulaPorId(int id)
@@ -46,8 +42,6 @@ namespace ColegioMonteSanto.Controllers
             return aula;
         }
 
-        // POST: /Aulas/Registrar
-        // Solo el Administrador puede registrar nuevas aulas
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador")]
@@ -59,8 +53,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetAulaPorId), new { id = aula.aula_id }, aula);
         }
 
-        // PUT: /Aulas/Editar/{id}
-        // Solo el Administrador puede editar aulas
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -97,8 +89,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Aulas/Eliminar/{id}
-        // Solo el Administrador puede eliminar aulas
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -117,7 +107,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Método auxiliar para verificar si un aula existe
         private bool AulaExists(int id)
         {
             return _context.Aulas.Any(e => e.aula_id == id);

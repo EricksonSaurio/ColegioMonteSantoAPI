@@ -22,8 +22,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /ProcesoAlumno/MisCalificaciones
-        // Permite que el alumno vea sus propias calificaciones
         [HttpGet("MisCalificaciones")]
         public async Task<ActionResult<IEnumerable<CalificacionModel>>> MisCalificaciones()
         {
@@ -37,8 +35,6 @@ namespace ColegioMonteSanto.Controllers
             return Ok(calificaciones);
         }
 
-        // GET: /ProcesoAlumno/ProgresoMateria/{materiaId}
-        // Permite al alumno ver el progreso en una materia específica
         [HttpGet("ProgresoMateria/{materiaId}")]
         public async Task<ActionResult<CalificacionModel>> ProgresoMateria(int materiaId)
         {
@@ -51,8 +47,6 @@ namespace ColegioMonteSanto.Controllers
             return Ok(calificaciones);
         }
 
-        // GET: /ProcesoAlumno/MateriasInscritas
-        // Permite al alumno ver las materias en las que está inscrito
         [HttpGet("MateriasInscritas")]
         public async Task<ActionResult<IEnumerable<MateriaModel>>> MateriasInscritas()
         {

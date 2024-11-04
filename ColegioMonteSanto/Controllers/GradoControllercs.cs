@@ -20,8 +20,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Grados/Listar
-        // Permite que tanto el Administrador como el Profesor puedan listar los grados
         [HttpGet]
         [Route("Listar")]
         [Authorize(Roles = "Administrador, Profesor")]
@@ -30,8 +28,6 @@ namespace ColegioMonteSanto.Controllers
             return await _context.Grados.ToListAsync();
         }
 
-        // GET: /Grados/{id}
-        // Permite que tanto el Administrador como el Profesor puedan ver un grado específico
         [HttpGet("{id}")]
         [Authorize(Roles = "Administrador, Profesor")]
         public async Task<ActionResult<GradoModel>> GetGradoPorId(int id)
@@ -46,8 +42,6 @@ namespace ColegioMonteSanto.Controllers
             return grado;
         }
 
-        // POST: /Grados/Registrar
-        // Solo el Administrador puede registrar nuevos grados
         [HttpPost]
         [Route("Registrar")]
         [Authorize(Roles = "Administrador")]
@@ -59,8 +53,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetGradoPorId), new { id = grado.grado_id }, grado);
         }
 
-        // PUT: /Grados/Editar/{id}
-        // Solo el Administrador puede editar grados
         [HttpPut]
         [Route("Editar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -97,8 +89,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Grados/Eliminar/{id}
-        // Solo el Administrador puede eliminar grados
         [HttpDelete]
         [Route("Eliminar/{id}")]
         [Authorize(Roles = "Administrador")]
@@ -117,7 +107,6 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // Método auxiliar para verificar si un grado existe
         private bool GradoExists(int id)
         {
             return _context.Grados.Any(e => e.grado_id == id);

@@ -16,7 +16,6 @@ namespace ColegioMonteSanto.Controllers
             _context = context;
         }
 
-        // GET: /Periodos/Listar
         [HttpGet]
         [Route("Listar")]
         public async Task<ActionResult<IEnumerable<PeriodoModel>>> GetPeriodos()
@@ -24,7 +23,6 @@ namespace ColegioMonteSanto.Controllers
             return await _context.Periodos.ToListAsync();
         }
 
-        // GET: /Periodos/5
         [HttpGet("{id}")]
         public async Task<ActionResult<PeriodoModel>> GetPeriodoPorId(int id)
         {
@@ -38,7 +36,6 @@ namespace ColegioMonteSanto.Controllers
             return periodo;
         }
 
-        // POST: /Periodos/Registrar
         [HttpPost]
         [Route("Registrar")]
         public async Task<ActionResult<PeriodoModel>> PostPeriodo(PeriodoModel periodo)
@@ -49,7 +46,6 @@ namespace ColegioMonteSanto.Controllers
             return CreatedAtAction(nameof(GetPeriodoPorId), new { id = periodo.periodo_id }, periodo);
         }
 
-        // PUT: /Periodos/Editar/5
         [HttpPut]
         [Route("Editar/{id}")]
         public async Task<IActionResult> EditarPeriodo(int id, [FromBody] PeriodoModel periodo)
@@ -85,27 +81,23 @@ namespace ColegioMonteSanto.Controllers
             return NoContent();
         }
 
-        // DELETE: /Periodos/Eliminar/5
         [HttpDelete]
         [Route("Eliminar/{id}")]
         public async Task<IActionResult> EliminarPeriodo(int id)
         {
             var periodo = await _context.Periodos.FindAsync(id);
 
-            // Verificar si el periodo existe
             if (periodo == null)
             {
                 return NotFound("Periodo no encontrado.");
             }
 
-            // Remover el periodo de la base de datos
             _context.Periodos.Remove(periodo);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        // Método auxiliar para verificar si un periodo existe
         private bool PeriodoExists(int id)
         {
             return _context.Periodos.Any(e => e.periodo_id == id);
